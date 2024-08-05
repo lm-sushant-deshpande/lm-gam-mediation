@@ -71,28 +71,15 @@ public class BannerActivity extends AppCompatActivity {
 
     // Set up the button click listener
     loadAdButton.setOnClickListener(view -> {
-      if (adView != null) {
-        // Refresh the ad if already loaded
-        adView.loadAd(new AdManagerAdRequest.Builder().build());
+      if (googleMobileAdsConsentManager.canRequestAds()) {
+        loadBanner();
       } else {
-        // Load the ad if it's not already loaded
-        if (googleMobileAdsConsentManager.canRequestAds()) {
-          loadBanner();
-        }
+        Toast.makeText(BannerActivity.this, "Ads cannot be requested at this time", Toast.LENGTH_SHORT).show();
       }
     });
 
-    // Since we're loading the banner based on the adContainerView size, we need to wait until this
-    // view is laid out before we can get the width.
-    adContainerView
-            .getViewTreeObserver()
-            .addOnGlobalLayoutListener(
-                    () -> {
-                      if (!initialLayoutComplete.getAndSet(true)
-                              && googleMobileAdsConsentManager.canRequestAds()) {
-                        loadBanner();
-                      }
-                    });
+    // Remove any automatic ad loading during initial layout.
+    // We will load the ad only when the button is clicked.
   }
 
   @Override
@@ -120,8 +107,11 @@ public class BannerActivity extends AppCompatActivity {
   }
 
   private void loadBanner() {
-    // [START create_ad_view]
-    // Create a new ad view.
+    if (adView != null) {
+      adContainerView.removeView(adView); // Remove old ad view if present
+    }
+
+    // Create a new ad view
     adView = new AdManagerAdView(this);
     adView.setAdUnitId(AD_UNIT);
     adView.setAdSize(getAdSize());
@@ -142,15 +132,12 @@ public class BannerActivity extends AppCompatActivity {
         Log.e(TAG, "Ad failed to load: " + adError.getMessage());
       }
     });
-    // [END create_ad_view]
 
-    // [START load_ad]
-    // Start loading the ad in the background.
+    // Start loading the ad in the background
     AdManagerAdRequest adRequest = new AdManagerAdRequest.Builder().build();
     adView.loadAd(adRequest);
-    // [END load_ad]
 
-    // Replace ad container with new ad view.
+    // Replace ad container with new ad view
     adContainerView.removeAllViews();
     adContainerView.addView(adView);
   }
@@ -160,7 +147,7 @@ public class BannerActivity extends AppCompatActivity {
       return;
     }
 
-    // Set your test devices.
+    // Set your test devices
     MobileAds.setRequestConfiguration(
             new RequestConfiguration.Builder()
                     .setTestDeviceIds(Arrays.asList(TEST_DEVICE_HASHED_ID))
@@ -168,16 +155,10 @@ public class BannerActivity extends AppCompatActivity {
 
     new Thread(
             () -> {
-              // Initialize the Google Mobile Ads SDK on a background thread.
+              // Initialize the Google Mobile Ads SDK on a background thread
               MobileAds.initialize(this, initializationStatus -> {});
 
-              // Load an ad on the main thread.
-              runOnUiThread(
-                      () -> {
-                        if (initialLayoutComplete.get()) {
-                          loadBanner();
-                        }
-                      });
+              // No need to load the ad here; it's done when the button is clicked
             })
             .start();
   }

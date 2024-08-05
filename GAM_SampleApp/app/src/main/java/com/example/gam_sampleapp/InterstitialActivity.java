@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2013 Google, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.example.gam_sampleapp;
 
 import android.annotation.SuppressLint;
@@ -23,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,26 +29,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @SuppressLint("SetTextI18n")
 public class InterstitialActivity extends AppCompatActivity {
 
-  // Check your logcat output for the test device hashed ID e.g.
-  // "Use RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("ABCDEF012345"))
-  // to get test ads on this device" or
-  // "Use new ConsentDebugSettings.Builder().addTestDeviceHashedId("ABCDEF012345") to set this as
-  // a debug device".
-  public static final String TEST_DEVICE_HASHED_ID = "ABCDEF012345";
+    public static final String TEST_DEVICE_HASHED_ID = "ABCDEF012345";
+    private static final long GAME_LENGTH_MILLISECONDS = 3000;
+    private static final String AD_UNIT_ID = "/21775744923/example/interstitial";
+    private static final String TAG = "MyActivity";
 
-  private static final long GAME_LENGTH_MILLISECONDS = 3000;
-  private static final String AD_UNIT_ID = "/21775744923/example/interstitial";
-  private static final String TAG = "MyActivity";
-
-  private final AtomicBoolean isMobileAdsInitializeCalled = new AtomicBoolean(false);
-  private GoogleMobileAdsConsentManager googleMobileAdsConsentManager;
-  private AdManagerInterstitialAd interstitialAd;
-  private CountDownTimer countDownTimer;
-  private Button loadAd;
-  private boolean gamePaused;
-  private boolean gameOver;
-  private boolean adIsLoading;
-  private long timerMilliseconds;
+    private final AtomicBoolean isMobileAdsInitializeCalled = new AtomicBoolean(false);
+    private GoogleMobileAdsConsentManager googleMobileAdsConsentManager;
+    private AdManagerInterstitialAd interstitialAd;
+    private CountDownTimer countDownTimer;
+    private Button loadAd;
+    private Button showAd;
+    private boolean gamePaused;
+    private boolean gameOver;
+    private boolean adIsLoading;
+    private long timerMilliseconds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,16 +53,13 @@ public class InterstitialActivity extends AppCompatActivity {
         // Log the Mobile Ads SDK version.
         Log.d(TAG, "Google Mobile Ads SDK Version: " + MobileAds.getVersion());
 
-        googleMobileAdsConsentManager =
-                GoogleMobileAdsConsentManager.getInstance(getApplicationContext());
+        googleMobileAdsConsentManager = GoogleMobileAdsConsentManager.getInstance(getApplicationContext());
         googleMobileAdsConsentManager.gatherConsent(
                 this,
                 consentError -> {
                     if (consentError != null) {
                         // Consent not obtained in current session.
-                        Log.w(
-                                TAG,
-                                String.format("%s: %s", consentError.getErrorCode(), consentError.getMessage()));
+                        Log.w(TAG, String.format("%s: %s", consentError.getErrorCode(), consentError.getMessage()));
                     }
 
                     startGame();
@@ -98,13 +74,9 @@ public class InterstitialActivity extends AppCompatActivity {
                     }
                 });
 
-        // This sample attempts to load ads using consent obtained in the previous session.
-        if (googleMobileAdsConsentManager.canRequestAds()) {
-            initializeMobileAdsSdk();
-        }
-
+        // Initialize the buttons
         loadAd = findViewById(R.id.load_ad);
-        Button showAd = findViewById(R.id.show_ad);
+        showAd = findViewById(R.id.show_ad);
 
         loadAd.setOnClickListener(view -> {
             loadAd();
@@ -118,43 +90,41 @@ public class InterstitialActivity extends AppCompatActivity {
         showAd.setEnabled(false);
     }
 
-  private void createTimer(final long milliseconds) {
-    // Create the game timer, which counts down to the end of the level
-    // and shows the "retry" button.
-    if (countDownTimer != null) {
-      countDownTimer.cancel();
-    }
+    private void createTimer(final long milliseconds) {
+        // Create the game timer, which counts down to the end of the level
+        // and shows the "retry" button.
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
 
-    countDownTimer =
-        new CountDownTimer(milliseconds, 50) {
-          @Override
-          public void onTick(long millisUnitFinished) {
-            timerMilliseconds = millisUnitFinished;
-          }
+        countDownTimer = new CountDownTimer(milliseconds, 50) {
+            @Override
+            public void onTick(long millisUnitFinished) {
+                timerMilliseconds = millisUnitFinished;
+            }
 
-          @Override
-          public void onFinish() {
-            gameOver = true;
-              loadAd.setVisibility(View.VISIBLE);
-          }
+            @Override
+            public void onFinish() {
+                gameOver = true;
+                loadAd.setVisibility(View.VISIBLE);
+            }
         };
 
-    countDownTimer.start();
-  }
+        countDownTimer.start();
+    }
 
-  @Override
-  public void onResume() {
-    // Start or resume the game.
-    super.onResume();
-    resumeGame();
-  }
+    @Override
+    public void onResume() {
+        // Start or resume the game.
+        super.onResume();
+        resumeGame();
+    }
 
-  @Override
-  public void onPause() {
-    super.onPause();
-    pauseGame();
-  }
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        pauseGame();
+    }
 
     private void loadAd() {
         // Request a new ad if one isn't already loaded.
@@ -177,7 +147,7 @@ public class InterstitialActivity extends AppCompatActivity {
                         Log.i(TAG, "onAdLoaded");
                         Toast.makeText(InterstitialActivity.this, "Ad loaded successfully!", Toast.LENGTH_SHORT).show();
                         // Enable the "Show Ad" button after the ad is loaded.
-                        findViewById(R.id.show_ad).setEnabled(true);
+                        showAd.setEnabled(true);
 
                         interstitialAd.setFullScreenContentCallback(
                                 new FullScreenContentCallback() {
@@ -189,7 +159,7 @@ public class InterstitialActivity extends AppCompatActivity {
                                         // show it a second time.
                                         InterstitialActivity.this.interstitialAd = null;
                                         // Optionally disable the "Show Ad" button if desired.
-                                        findViewById(R.id.show_ad).setEnabled(false);
+                                        showAd.setEnabled(false);
                                     }
 
                                     @Override
@@ -199,7 +169,7 @@ public class InterstitialActivity extends AppCompatActivity {
                                         // Make sure to set your reference to null so you don't
                                         // show it a second time.
                                         InterstitialActivity.this.interstitialAd = null;
-                                        findViewById(R.id.show_ad).setEnabled(false);
+                                        showAd.setEnabled(false);
                                     }
 
                                     @Override
@@ -227,11 +197,10 @@ public class InterstitialActivity extends AppCompatActivity {
                                         InterstitialActivity.this, "onAdFailedToLoad() with error: " + error, Toast.LENGTH_SHORT)
                                 .show();
                         // Optionally disable the "Show Ad" button if needed.
-                        findViewById(R.id.show_ad).setEnabled(false);
+                        showAd.setEnabled(false);
                     }
                 });
     }
-
 
     private void showInterstitial() {
         // Show the ad if it's ready. Otherwise restart the game.
@@ -245,49 +214,46 @@ public class InterstitialActivity extends AppCompatActivity {
         }
     }
 
-  private void startGame() {
-    // Hide the button, and kick off the timer.loadAd.setVisibility(View.INVISIBLE);
-    createTimer(GAME_LENGTH_MILLISECONDS);
-    gamePaused = false;
-    gameOver = false;
-  }
-
-  private void resumeGame() {
-    if (gameOver || !gamePaused) {
-      return;
-    }
-    // Create a new timer for the correct length.
-    gamePaused = false;
-    createTimer(timerMilliseconds);
-  }
-
-  private void pauseGame() {
-    if (gameOver || gamePaused) {
-      return;
-    }
-    countDownTimer.cancel();
-    gamePaused = true;
-  }
-
-  private void initializeMobileAdsSdk() {
-    if (isMobileAdsInitializeCalled.getAndSet(true)) {
-      return;
+    private void startGame() {
+        // Hide the button, and kick off the timer.loadAd.setVisibility(View.INVISIBLE);
+        createTimer(GAME_LENGTH_MILLISECONDS);
+        gamePaused = false;
+        gameOver = false;
     }
 
-    // Set your test devices.
-    MobileAds.setRequestConfiguration(
-        new RequestConfiguration.Builder()
-            .setTestDeviceIds(Arrays.asList(TEST_DEVICE_HASHED_ID))
-            .build());
+    private void resumeGame() {
+        if (gameOver || !gamePaused) {
+            return;
+        }
+        // Create a new timer for the correct length.
+        gamePaused = false;
+        createTimer(timerMilliseconds);
+    }
 
-    new Thread(
-            () -> {
-              // Initialize the Google Mobile Ads SDK on a background thread.
-              MobileAds.initialize(this, initializationStatus -> {});
+    private void pauseGame() {
+        if (gameOver || gamePaused) {
+            return;
+        }
+        countDownTimer.cancel();
+        gamePaused = true;
+    }
 
-              // Load an ad on the main thread.
-              runOnUiThread(() -> loadAd());
-            })
-        .start();
-  }
+    private void initializeMobileAdsSdk() {
+        if (isMobileAdsInitializeCalled.getAndSet(true)) {
+            return;
+        }
+
+        // Set your test devices.
+        MobileAds.setRequestConfiguration(
+                new RequestConfiguration.Builder()
+                        .setTestDeviceIds(Arrays.asList(TEST_DEVICE_HASHED_ID))
+                        .build());
+
+        new Thread(
+                () -> {
+                    // Initialize the Google Mobile Ads SDK on a background thread.
+                    MobileAds.initialize(this, initializationStatus -> {});
+                })
+                .start();
+    }
 }
