@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Title Bar -->
+    <LinearLayout
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="?attr/colorPrimary"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Interstitial Ad Example"
+            android:textSize="24sp"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+    <!-- Buttons Layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_bar"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/load_ad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Load Ad" />
+
+        <Button
+            android:id="@+id/show_ad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Ad"
+            android:layout_marginLeft="20dp"
+            android:enabled="false" />
+    </LinearLayout>
+
+</RelativeLayout>
