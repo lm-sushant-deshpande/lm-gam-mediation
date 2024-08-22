@@ -1,6 +1,7 @@
 package com.lemma.gam_mediation_adapter;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -21,6 +22,8 @@ import java.util.List;
 import lemma.lemmavideosdk.common.LemmaSDK;
 
 public class LemmaCustomEvent extends Adapter {
+
+    private static final String TAG = "LemmaCustomEvent";
     @NonNull
     @Override
     public VersionInfo getSDKVersionInfo() {
@@ -52,5 +55,6 @@ public class LemmaCustomEvent extends Adapter {
     @Override
     public void loadInterstitialAd(@NonNull MediationInterstitialAdConfiguration mediationInterstitialAdConfiguration, @NonNull MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> callback) {
         super.loadInterstitialAd(mediationInterstitialAdConfiguration, callback);
+        Log.d(TAG, "loadInterstitialAd");
     }
 }

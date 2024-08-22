@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
+    namespace 'lemma.lemmavideosdk'
     compileSdkVersion 34
 //    buildToolsVersion '25.0.0'
 
@@ -18,11 +19,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:24.2.1'
-    testImplementation 'junit:junit:4.12'
-    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'com.liulishuo.filedownloader:library:1.7.5'
+    implementation libs.appcompat.v7
+    testImplementation libs.junit.v412
+    implementation libs.okhttp
+    implementation libs.gson
+    implementation libs.picasso
+    implementation libs.library
 }
 

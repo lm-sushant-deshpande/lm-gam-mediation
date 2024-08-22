@@ -1,23 +1,37 @@
 [versions]
 agp = "8.5.0-alpha07"
+appcompatV7 = "28.0.0"
+gson = "2.10.1"
 junit = "4.13.2"
+junitJunit = "4.12"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
+library = "1.7.7"
 material = "1.12.0"
 activity = "1.9.0"
 constraintlayout = "2.1.4"
+okhttp = "4.9.3"
+picasso = "2.5.2"
+playServicesAds = "23.3.0"
 userMessagingPlatform = "3.0.0"
 playServicesAdsLite = "23.2.0"
 
 [libraries]
+appcompat-v7 = { module = "com.android.support:appcompat-v7", version.ref = "appcompatV7" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+junit-v412 = { module = "junit:junit", version.ref = "junitJunit" }
+library = { module = "com.liulishuo.filedownloader:library", version.ref = "library" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
+play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
 user-messaging-platform = { group = "com.google.android.ump", name = "user-messaging-platform", version.ref = "userMessagingPlatform" }
 play-services-ads-lite = { group = "com.google.android.gms", name = "play-services-ads-lite", version.ref = "playServicesAdsLite" }
 

@@ -32,7 +32,7 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
-    compileOnly(project(':lemmavideosdk'))
-    compileOnly("com.google.android.gms:play-services-ads:23.3.0")
+    compileOnly(projectlac(':lemmavideosdk'))
+    compileOnly(libs.play.services.ads)
 
 }

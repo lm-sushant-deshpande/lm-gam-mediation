@@ -19,8 +19,8 @@ public class LMBannerAd implements MediationBannerAd {
     }
 
     public void loadAd() {
-        LMBannerView banner new LMBannerView()
-        banner.loadAd();
+//        LMBannerView banner new LMBannerView();
+//        banner.loadAd();
     }
 
     @NonNull

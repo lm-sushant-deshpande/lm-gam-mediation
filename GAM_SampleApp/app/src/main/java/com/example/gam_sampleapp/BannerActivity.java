@@ -5,7 +5,6 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowMetrics;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -28,7 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class BannerActivity extends AppCompatActivity {
 
   public static final String TEST_DEVICE_HASHED_ID = "ABCDEF012345";
-  static final String AD_UNIT = "/21775744923/example/adaptive-banner";
+  static final String AD_UNIT = "/22192417927/HB Video Test";
   private static final String TAG = "MyActivity";
   private final AtomicBoolean isMobileAdsInitializeCalled = new AtomicBoolean(false);
   private final AtomicBoolean initialLayoutComplete = new AtomicBoolean(false);
