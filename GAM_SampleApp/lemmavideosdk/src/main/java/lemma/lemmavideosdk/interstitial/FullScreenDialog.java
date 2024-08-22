@@ -4,8 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +16,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+
+import com.example.gam_sampleapp.R;
+
 import java.lang.ref.WeakReference;
 
-import lemma.lemmavideosdk.R;
+
 import lemma.lemmavideosdk.common.LMUtils;
 import lemma.lemmavideosdk.videointerstitial.LMVideoInterstitial;
 
@@ -34,7 +38,7 @@ public class FullScreenDialog extends Dialog {
     private WeakReference<Context> contextWeakReference;
     private   boolean isShowAdCloseButton=true;
 
-    public FullScreenDialog(@NonNull WebView webView, @NonNull OnDialogCloseListener closeListener,Boolean isShowAdCloseButton) {
+    public FullScreenDialog(@NonNull WebView webView, @NonNull OnDialogCloseListener closeListener, Boolean isShowAdCloseButton) {
         super(webView.getContext(), android.R.style.Theme_Black_NoTitleBar);
         this.isShowAdCloseButton =isShowAdCloseButton;
         contextWeakReference = new WeakReference<>(webView.getContext());

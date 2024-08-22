@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
+
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -35,6 +35,7 @@ import lemma.lemmavideosdk.vast.manager.LMLocationManager;
 import lemma.lemmavideosdk.vast.manager.NetworkStatusMonitor;
 import lemma.lemmavideosdk.vast.tracker.TrackerDBHandler;
 import lemma.lemmavideosdk.vast.tracker.TrackerHandler;
+import androidx.annotation.NonNull;
 
 public class LMVideoInterstitial {
 

@@ -49,7 +49,7 @@ public class LemmaCustomEvent extends Adapter {
     public void loadBannerAd(@NonNull MediationBannerAdConfiguration mediationBannerAdConfiguration, @NonNull MediationAdLoadCallback<MediationBannerAd, MediationBannerAdCallback> callback) {
         super.loadBannerAd(mediationBannerAdConfiguration, callback);
         LMBannerAd bannerAd = new LMBannerAd(mediationBannerAdConfiguration, callback);
-
+        bannerAd.loadAd();
     }
 
     @Override

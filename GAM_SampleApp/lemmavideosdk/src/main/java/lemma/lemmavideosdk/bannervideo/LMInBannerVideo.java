@@ -5,11 +5,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
+
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
+
+import androidx.annotation.NonNull;
 
 import java.net.URL;
 import java.util.ArrayList;

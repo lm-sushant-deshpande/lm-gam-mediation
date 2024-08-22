@@ -5,9 +5,11 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowMetrics;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +25,8 @@ import com.google.android.gms.ads.admanager.AdManagerAdView;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import lemma.lemmavideosdk.banner.LMBannerView;
+
 /** Main Activity. Inflates main activity xml and child fragments. */
 public class BannerActivity extends AppCompatActivity {
 
@@ -35,51 +39,45 @@ public class BannerActivity extends AppCompatActivity {
   private AdManagerAdView adView;
   private FrameLayout adContainerView;
   private Button loadAdButton;
+  private LMBannerView bannerView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     setContentView(R.layout.banner_activity);
-    adContainerView = findViewById(R.id.ad_linear_container);
-    loadAdButton = findViewById(R.id.start);
 
-    // Log the Mobile Ads SDK version.
-    Log.d(TAG, "Google Mobile Ads SDK Version: " + MobileAds.getVersion());
+    bannerView = new LMBannerView(this, "895", "18618", new LMBannerView.LMAdSize(570, 162),"https://sg.ads.lemmatechnologies.com/lemma/servad");
 
-    googleMobileAdsConsentManager =
-            GoogleMobileAdsConsentManager.getInstance(getApplicationContext());
-    googleMobileAdsConsentManager.gatherConsent(
-            this,
-            consentError -> {
-              if (consentError != null) {
-                // Consent not obtained in current session.
-                Log.w(
-                        TAG,
-                        String.format("%s: %s", consentError.getErrorCode(), consentError.getMessage()));
-              }
+    FrameLayout mLinerAdContainer = findViewById(R.id.ad_linear_container);
+    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
-              if (googleMobileAdsConsentManager.canRequestAds()) {
-                initializeMobileAdsSdk();
-              }
+    mLinerAdContainer.addView(bannerView, params);
 
-              if (googleMobileAdsConsentManager.isPrivacyOptionsRequired()) {
-                // Regenerate the options menu to include a privacy setting.
-                invalidateOptionsMenu();
-              }
-            });
 
-    // Set up the button click listener
-    loadAdButton.setOnClickListener(view -> {
-      if (googleMobileAdsConsentManager.canRequestAds()) {
-        loadBanner();
-      } else {
-        Toast.makeText(BannerActivity.this, "Ads cannot be requested at this time", Toast.LENGTH_SHORT).show();
+    bannerView.setBannerViewListener(new LMBannerView.BannerViewListener() {
+      @Override
+      public void onAdReceived() {
+        Log.d(TAG,"Ad Received Successfully");
+      }
+
+      @Override
+      public void onAdError(Error error) {
+        Log.e(TAG, "Ad failed with error - " + error.toString());
       }
     });
 
-    // Remove any automatic ad loading during initial layout.
-    // We will load the ad only when the button is clicked.
+    Button playBtn = findViewById(R.id.start);
+    playBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        bannerView.loadAd();
+      }
+    });
+
   }
+
 
   @Override
   public void onPause() {

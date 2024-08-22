@@ -3,8 +3,9 @@ package lemma.lemmavideosdk.common;
 import android.content.Context;
 import android.location.Location;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
+
+import androidx.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONException;

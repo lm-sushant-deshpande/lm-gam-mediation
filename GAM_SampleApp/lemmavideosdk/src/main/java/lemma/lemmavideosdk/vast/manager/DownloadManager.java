@@ -3,7 +3,9 @@ package lemma.lemmavideosdk.vast.manager;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.UiThread;
+
+
+import androidx.annotation.UiThread;
 
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
