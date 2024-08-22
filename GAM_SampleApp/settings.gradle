@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "GAM_SampleApp"
 include ':app'
+include ':gam_mediation_adapter'
+include ':lemmavideosdk'

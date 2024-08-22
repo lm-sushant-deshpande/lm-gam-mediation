@@ -1,19 +1,16 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
 }
 
 android {
-    namespace 'com.example.gam_sampleapp'
+    namespace 'com.lemma.gam_mediation_adapter'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.gam_sampleapp"
-        minSdk 24
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        minSdk 21
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -32,13 +29,10 @@ dependencies {
 
     implementation libs.appcompat
     implementation libs.material
-    implementation libs.activity
-    implementation libs.constraintlayout
-    implementation libs.user.messaging.platform
-    implementation libs.play.services.ads.lite
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
-    implementation(project(':lemmavideosdk'))
-    implementation(project(':gam_mediation_adapter'))
+    compileOnly(project(':lemmavideosdk'))
+    compileOnly("com.google.android.gms:play-services-ads:23.3.0")
+
 }
