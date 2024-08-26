@@ -4,10 +4,13 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
 import com.google.android.gms.ads.mediation.MediationBannerAd;
 import com.google.android.gms.ads.mediation.MediationBannerAdCallback;
 import com.google.android.gms.ads.mediation.MediationBannerAdConfiguration;
+
+import java.util.Objects;
 
 import lemma.lemmavideosdk.banner.LMBannerView;
 import lemma.lemmavideosdk.banner.LMBannerView.BannerViewListener;
@@ -44,7 +47,15 @@ public class LMBannerAd implements MediationBannerAd {
 
             @Override
             public void onAdError(Error error) {
-                adLoadCallback.onFailure(error.getMessage());
+                // Create an AdError object
+                AdError adError = new AdError(
+                        error.hashCode(),
+                        Objects.requireNonNull(error.getMessage()),
+                        "com.lemma.gam_mediation_adapter"
+                );
+
+                // Notify the callback with the error
+                adLoadCallback.onFailure(adError);
             }
         });
     }

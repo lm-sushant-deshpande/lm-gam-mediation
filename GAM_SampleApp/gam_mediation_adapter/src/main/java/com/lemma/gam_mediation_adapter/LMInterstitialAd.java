@@ -4,10 +4,13 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.mediation.MediationInterstitialAd;
 import com.google.android.gms.ads.mediation.MediationInterstitialAdCallback;
 import com.google.android.gms.ads.mediation.MediationInterstitialAdConfiguration;
 import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
+
+import java.util.Objects;
 
 import lemma.lemmavideosdk.interstitial.LMInterstitial;
 import lemma.lemmavideosdk.interstitial.LMInterstitial.LMInterstitialListener;
@@ -37,8 +40,15 @@ public class LMInterstitialAd implements MediationInterstitialAd {
 
             @Override
             public void onAdFailed(LMInterstitial ad, Error error) {
+                // Create an AdError object
+                AdError adError = new AdError(
+                        error.hashCode(),
+                        Objects.requireNonNull(error.getMessage()),
+                        "com.lemma.gam_mediation_adapter"
+                );
+
                 // Notify that the ad failed to load
-                adLoadCallback.onFailure(String.valueOf(error));
+                adLoadCallback.onFailure(adError);
             }
 
             @Override
