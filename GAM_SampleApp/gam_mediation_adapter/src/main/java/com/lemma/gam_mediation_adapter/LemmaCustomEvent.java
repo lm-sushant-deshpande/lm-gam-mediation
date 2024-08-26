@@ -20,6 +20,7 @@ import com.google.android.gms.ads.mediation.MediationInterstitialAdConfiguration
 import java.util.List;
 
 import lemma.lemmavideosdk.common.LemmaSDK;
+import lemma.lemmavideosdk.interstitial.LMInterstitial;
 
 public class LemmaCustomEvent extends Adapter {
 
@@ -41,20 +42,29 @@ public class LemmaCustomEvent extends Adapter {
     }
 
     @Override
-    public void initialize(@NonNull Context context, @NonNull InitializationCompleteCallback initializationCompleteCallback, @NonNull List<MediationConfiguration> list) {
+    public void initialize(@NonNull Context context,
+                           @NonNull InitializationCompleteCallback initializationCompleteCallback,
+                           @NonNull List<MediationConfiguration> list) {
         LemmaSDK.init(context, false);
     }
 
     @Override
-    public void loadBannerAd(@NonNull MediationBannerAdConfiguration mediationBannerAdConfiguration, @NonNull MediationAdLoadCallback<MediationBannerAd, MediationBannerAdCallback> callback) {
+    public void loadBannerAd(@NonNull MediationBannerAdConfiguration mediationBannerAdConfiguration,
+                             @NonNull MediationAdLoadCallback<MediationBannerAd, MediationBannerAdCallback> callback) {
         super.loadBannerAd(mediationBannerAdConfiguration, callback);
         LMBannerAd bannerAd = new LMBannerAd(mediationBannerAdConfiguration, callback);
         bannerAd.loadAd();
     }
 
     @Override
-    public void loadInterstitialAd(@NonNull MediationInterstitialAdConfiguration mediationInterstitialAdConfiguration, @NonNull MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> callback) {
+    public void loadInterstitialAd(@NonNull MediationInterstitialAdConfiguration mediationInterstitialAdConfiguration,
+                                   @NonNull MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> callback) {
         super.loadInterstitialAd(mediationInterstitialAdConfiguration, callback);
         Log.d(TAG, "loadInterstitialAd");
+
+        // Initialize and load the interstitial ad
+        LMInterstitialAd interstitialAd = new LMInterstitialAd(mediationInterstitialAdConfiguration.getContext(),
+                mediationInterstitialAdConfiguration, callback);
+        interstitialAd.loadAd();
     }
 }

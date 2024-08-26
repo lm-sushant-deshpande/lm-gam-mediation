@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         interstitialLink.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this,InterstitialActivity.class);
+            Intent intent = new Intent(MainActivity.this, InterstitialActivity.class);
             startActivity(intent);
         });
 
