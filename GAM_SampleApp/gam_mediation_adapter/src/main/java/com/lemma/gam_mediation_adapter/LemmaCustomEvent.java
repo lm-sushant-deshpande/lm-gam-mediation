@@ -27,6 +27,7 @@ public class LemmaCustomEvent extends Adapter {
     @NonNull
     @Override
     public VersionInfo getSDKVersionInfo() {
+        Log.d(TAG, "getSDKVersionInfo");
         String version = LemmaSDK.getVersion();
         String[] version_split = version.split("\\.");
         return new VersionInfo(Integer.parseInt(version_split[0]),
@@ -37,11 +38,13 @@ public class LemmaCustomEvent extends Adapter {
     @NonNull
     @Override
     public VersionInfo getVersionInfo() {
+        Log.d(TAG, "getVersionInfo");
         return new VersionInfo(1, 0, 0);
     }
 
     @Override
     public void initialize(@NonNull Context context, @NonNull InitializationCompleteCallback initializationCompleteCallback, @NonNull List<MediationConfiguration> list) {
+        Log.d(TAG, "Lemma initialize");
         LemmaSDK.init(context, false);
     }
 
