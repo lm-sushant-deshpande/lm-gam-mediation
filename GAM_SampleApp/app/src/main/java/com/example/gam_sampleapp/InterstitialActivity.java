@@ -21,6 +21,7 @@ import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
+import com.lemma.gam_mediation_adapter.LemmaCustomEvent;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
