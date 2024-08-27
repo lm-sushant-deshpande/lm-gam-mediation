@@ -48,8 +48,13 @@ public class LMBannerAd implements MediationBannerAd {
             adUnitId = jsonObject.optString("adUnitId", "");
             adServerUrl = jsonObject.optString("adServerUrl", "");
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException error) {
+            AdError adError = new AdError(
+                    error.hashCode(),
+                    Objects.requireNonNull(error.getMessage()),
+                    "com.lemma.gam_mediation_adapter"
+            );
+            adLoadCallback.onFailure(adError);
         }
 
         // Get the ad size from the configuration
