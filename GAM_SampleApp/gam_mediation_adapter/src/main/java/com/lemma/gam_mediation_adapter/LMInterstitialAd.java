@@ -11,6 +11,9 @@ import com.google.android.gms.ads.mediation.MediationInterstitialAdCallback;
 import com.google.android.gms.ads.mediation.MediationInterstitialAdConfiguration;
 import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 import lemma.lemmavideosdk.interstitial.LMInterstitial;
@@ -31,9 +34,23 @@ public class LMInterstitialAd implements MediationInterstitialAd {
                             @NonNull MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> adLoadCallback) {
         this.adLoadCallback = adLoadCallback;
 
-        String pubId = mediationInterstitialAdConfiguration.getServerParameters().getString("pubId");
-        String adUnitId  = mediationInterstitialAdConfiguration.getServerParameters().getString("adUnitId");
-        String adServerUrl = mediationInterstitialAdConfiguration.getServerParameters().getString("adServerUrl");
+        // Extract the JSON string from the Bundle
+        String serverParameter = mediationInterstitialAdConfiguration.getServerParameters().getString("parameter");
+
+        // Parse server parameters from JSONObject
+        String pubId = "";
+        String adUnitId = "";
+        String adServerUrl = "";
+
+        try {
+            JSONObject jsonObject = new JSONObject(serverParameter);
+            pubId = jsonObject.optString("pubId", "");
+            adUnitId = jsonObject.optString("adUnitId", "");
+            adServerUrl = jsonObject.optString("adServerUrl", "");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
 
         // Initialize LMInterstitial with required parameters

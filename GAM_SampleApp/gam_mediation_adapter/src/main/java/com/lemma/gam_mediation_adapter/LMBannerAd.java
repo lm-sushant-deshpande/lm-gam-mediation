@@ -11,6 +11,9 @@ import com.google.android.gms.ads.mediation.MediationBannerAd;
 import com.google.android.gms.ads.mediation.MediationBannerAdCallback;
 import com.google.android.gms.ads.mediation.MediationBannerAdConfiguration;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 import lemma.lemmavideosdk.banner.LMBannerView;
@@ -31,10 +34,23 @@ public class LMBannerAd implements MediationBannerAd {
                       @NonNull MediationAdLoadCallback<MediationBannerAd, MediationBannerAdCallback> callback) {
         this.adLoadCallback = callback;
 
-        // Extract necessary parameters from mediationBannerAdConfiguration
-        String pubId = mediationBannerAdConfiguration.getServerParameters().getString("pubId");
-        String adUnitId = mediationBannerAdConfiguration.getServerParameters().getString("adUnitId");
-        String adServerUrl = mediationBannerAdConfiguration.getServerParameters().getString("adServerUrl");
+        // Extract the JSON string from the Bundle
+        String serverParameter = mediationBannerAdConfiguration.getServerParameters().getString("parameter");
+
+        // Parse server parameters from JSONObject
+        String pubId = "";
+        String adUnitId = "";
+        String adServerUrl = "";
+
+        try {
+            JSONObject jsonObject = new JSONObject(serverParameter);
+            pubId = jsonObject.optString("pubId", "");
+            adUnitId = jsonObject.optString("adUnitId", "");
+            adServerUrl = jsonObject.optString("adServerUrl", "");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         // Get the ad size from the configuration
         int width = mediationBannerAdConfiguration.getAdSize().getWidth();
