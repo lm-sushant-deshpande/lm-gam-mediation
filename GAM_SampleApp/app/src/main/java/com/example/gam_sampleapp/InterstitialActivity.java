@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @SuppressLint("SetTextI18n")
 public class InterstitialActivity extends AppCompatActivity {
 
-    public static final String TEST_DEVICE_HASHED_ID = "ABCDEF012345";
+    public static final String TEST_DEVICE_HASHED_ID = "5EDC3D41206D55C7AF372A3BBE9A4D71";
     private static final long GAME_LENGTH_MILLISECONDS = 3000;
     private static final String AD_UNIT_ID = "/22192417927/HB Video Test";
     private static final String TAG = "MyActivity";
@@ -133,7 +133,21 @@ public class InterstitialActivity extends AppCompatActivity {
             return;
         }
         adIsLoading = true;
-        AdManagerAdRequest adRequest = new AdManagerAdRequest.Builder().build();
+
+        // Build the ad request.
+        AdManagerAdRequest.Builder adRequestBuilder = new AdManagerAdRequest.Builder();
+
+        // Add any additional configuration you might be using
+        // For example, you could add test devices, keywords, etc.
+
+        AdManagerAdRequest adRequest = adRequestBuilder.build();
+
+        // Log the ad request details.
+        Log.d(TAG, "Ad Request Details: " +
+                "Test Devices: " + MobileAds.getRequestConfiguration().getTestDeviceIds() +
+                ", Ad Request: " + adRequest.toString() // AdManagerAdRequest does not have a toString() method, use specific details.
+        );
+
         AdManagerInterstitialAd.load(
                 this,
                 AD_UNIT_ID,
@@ -184,24 +198,29 @@ public class InterstitialActivity extends AppCompatActivity {
                     @Override
                     public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                         // Handle the error
-                        Log.i(TAG, loadAdError.getMessage());
+                        String errorMessage = loadAdError.getMessage();
+                        String errorDetails = String.format(
+                                java.util.Locale.US,
+                                "domain: %s, code: %d, message: %s",
+                                loadAdError.getDomain(),
+                                loadAdError.getCode(),
+                                loadAdError.getMessage()
+                        );
+
+                        Log.e(TAG, "Ad failed to load. Error: " + errorDetails);
+                        Toast.makeText(
+                                InterstitialActivity.this,
+                                "Failed to load ad: " + errorMessage,
+                                Toast.LENGTH_SHORT
+                        ).show();
+
                         interstitialAd = null;
                         adIsLoading = false;
-                        String error =
-                                String.format(
-                                        java.util.Locale.US,
-                                        "domain: %s, code: %d, message: %s",
-                                        loadAdError.getDomain(),
-                                        loadAdError.getCode(),
-                                        loadAdError.getMessage());
-                        Toast.makeText(
-                                        InterstitialActivity.this, "onAdFailedToLoad() with error: " + error, Toast.LENGTH_SHORT)
-                                .show();
-                        // Optionally disable the "Show Ad" button if needed.
                         showAd.setEnabled(false);
                     }
                 });
     }
+
 
     private void showInterstitial() {
         // Show the ad if it's ready. Otherwise restart the game.

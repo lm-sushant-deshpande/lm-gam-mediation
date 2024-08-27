@@ -54,8 +54,9 @@ public class LemmaCustomEvent extends Adapter {
     @Override
     public void loadBannerAd(@NonNull MediationBannerAdConfiguration mediationBannerAdConfiguration,
                              @NonNull MediationAdLoadCallback<MediationBannerAd, MediationBannerAdCallback> callback) {
-        Log.d(TAG, "loadBannerAd");
         super.loadBannerAd(mediationBannerAdConfiguration, callback);
+        Log.d(TAG, "loadBannerAd");
+
         LMBannerAd bannerAd = new LMBannerAd(mediationBannerAdConfiguration, callback);
         bannerAd.loadAd();
     }
@@ -67,8 +68,7 @@ public class LemmaCustomEvent extends Adapter {
         Log.d(TAG, "loadInterstitialAd");
 
         // Initialize and load the interstitial ad
-        LMInterstitialAd interstitialAd = new LMInterstitialAd(mediationInterstitialAdConfiguration.getContext(),
-                mediationInterstitialAdConfiguration, callback);
+        LMInterstitialAd interstitialAd = new LMInterstitialAd(mediationInterstitialAdConfiguration, callback);
         interstitialAd.loadAd();
     }
 }

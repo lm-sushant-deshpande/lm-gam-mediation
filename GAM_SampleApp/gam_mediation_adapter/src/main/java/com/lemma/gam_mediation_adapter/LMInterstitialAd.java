@@ -3,6 +3,7 @@ package com.lemma.gam_mediation_adapter;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.mediation.MediationInterstitialAd;
@@ -18,20 +19,28 @@ import lemma.lemmavideosdk.interstitial.LMInterstitial.LMInterstitialListener;
 public class LMInterstitialAd implements MediationInterstitialAd {
 
     private final LMInterstitial lmInterstitial;
+
+    @NonNull
     private final MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> adLoadCallback;
+
+    @Nullable
     private MediationInterstitialAdCallback interstitialAdCallback;
 
     // Constructor
-    public LMInterstitialAd(@NonNull Context context,
-                            @NonNull MediationInterstitialAdConfiguration adConfiguration,
+    public LMInterstitialAd(@NonNull MediationInterstitialAdConfiguration mediationInterstitialAdConfiguration,
                             @NonNull MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> adLoadCallback) {
         this.adLoadCallback = adLoadCallback;
 
+        String pubId = mediationInterstitialAdConfiguration.getServerParameters().getString("pubId");
+        String adUnitId  = mediationInterstitialAdConfiguration.getServerParameters().getString("adUnitId");
+        String adServerUrl = mediationInterstitialAdConfiguration.getServerParameters().getString("adServerUrl");
+
+
         // Initialize LMInterstitial with required parameters
-        this.lmInterstitial = new LMInterstitial(context, adConfiguration.getServerParameters().getString("pubId"),
-                adConfiguration.getServerParameters().getString("adUnitId"));
+        this.lmInterstitial = new LMInterstitial(mediationInterstitialAdConfiguration.getContext(), pubId, adUnitId ,adServerUrl);
 
         this.lmInterstitial.setListener(new LMInterstitialListener() {
+
             @Override
             public void onAdReceived(LMInterstitial ad) {
                 // Notify that the ad has been loaded
