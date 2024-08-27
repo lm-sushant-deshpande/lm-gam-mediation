@@ -36,3 +36,45 @@ dependencies {
     compileOnly(libs.play.services.ads)
 
 }
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId = 'com.lemma.gam_mediation_adapter'
+            artifactId = 'gam_mediation_adapter'
+            version = project.hasProperty('version') ? project['version'] : '1.0.0'
+
+            artifact("$buildDir/outputs/aar/${project.name}-release.aar")
+
+            pom {
+                name = 'gam_mediation_adapter'
+                description = 'SDK for gam mediation adapter'
+                url = 'https://github.com/lm-sushant-deshpande/lm-gam-mediation'
+            }
+        }
+    }
+    repositories {
+        maven {
+            url project.findProperty("mavenUrl") ?: ""
+            credentials {
+                username = project.findProperty("nexusUsername") ?: ""
+                password = project.findProperty("nexusPassword") ?: ""
+            }
+        }
+    }
+}
+
+task printAarPath {
+    doLast {
+        def aarFile = file("$buildDir/outputs/aar/${project.name}-release.aar")
+        if (aarFile.exists()) {
+            println "AAR file path: ${aarFile.absolutePath}"
+        } else {
+            println "AAR file does not exist at ${aarFile.absolutePath}"
+        }
+    }
+}
+
+tasks.named('publishAarPublicationToMavenRepository').configure {
+    dependsOn tasks.named('bundleReleaseAar')
+    dependsOn printAarPath
+}
