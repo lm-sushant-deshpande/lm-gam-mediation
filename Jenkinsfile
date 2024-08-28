@@ -57,6 +57,7 @@ pipeline {
             steps {
                 echo 'Cleaning Existing Directory...'
                 cleanWs()
+                sh 'pwd'
             }
         }
 
