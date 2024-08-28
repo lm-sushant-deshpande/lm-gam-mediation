@@ -56,7 +56,7 @@ pipeline {
         stage('Clean Workspace') {
             steps {
                 echo 'Cleaning Existing Directory...'
-                deleteDir()
+                cleanWs()
             }
         }
 
