@@ -22,7 +22,8 @@ import lemma.lemmavideosdk.banner.LMBannerView.LMAdSize;
 
 public class LMBannerAd implements MediationBannerAd {
 
-    private final LMBannerView lmBannerView;
+    @Nullable
+    private LMBannerView lmBannerView;
 
     @NonNull
     private final MediationAdLoadCallback<MediationBannerAd, MediationBannerAdCallback> adLoadCallback;
@@ -48,6 +49,34 @@ public class LMBannerAd implements MediationBannerAd {
             adUnitId = jsonObject.optString("adUnitId", "");
             adServerUrl = jsonObject.optString("adServerUrl", "");
 
+            // Get the ad size from the configuration
+            int width = mediationBannerAdConfiguration.getAdSize().getWidth();
+            int height = mediationBannerAdConfiguration.getAdSize().getHeight();
+            LMAdSize adSize = new LMAdSize(width, height);
+
+            // Initialize LMBannerView
+            this.lmBannerView = new LMBannerView(mediationBannerAdConfiguration.getContext(), pubId, adUnitId, adSize, adServerUrl);
+            this.lmBannerView.setBannerViewListener(new BannerViewListener() {
+                @Override
+                public void onAdReceived() {
+                    bannerAdCallback = adLoadCallback.onSuccess(LMBannerAd.this);
+                    bannerAdCallback.reportAdImpression();
+                }
+
+                @Override
+                public void onAdError(Error error) {
+                    // Create an AdError object
+                    AdError adError = new AdError(
+                            error.hashCode(),
+                            Objects.requireNonNull(error.getMessage()),
+                            "com.lemma.gam_mediation_adapter"
+                    );
+
+                    // Notify the callback with the error
+                    adLoadCallback.onFailure(adError);
+                }
+            });
+
         } catch (JSONException e) {
             AdError adError = new AdError(
                     e.hashCode(),
@@ -57,37 +86,20 @@ public class LMBannerAd implements MediationBannerAd {
             adLoadCallback.onFailure(adError);
         }
 
-        // Get the ad size from the configuration
-        int width = mediationBannerAdConfiguration.getAdSize().getWidth();
-        int height = mediationBannerAdConfiguration.getAdSize().getHeight();
-        LMAdSize adSize = new LMAdSize(width, height);
-
-        // Initialize LMBannerView
-        this.lmBannerView = new LMBannerView(mediationBannerAdConfiguration.getContext(), pubId, adUnitId, adSize, adServerUrl);
-        this.lmBannerView.setBannerViewListener(new BannerViewListener() {
-            @Override
-            public void onAdReceived() {
-                bannerAdCallback = adLoadCallback.onSuccess(LMBannerAd.this);
-                bannerAdCallback.reportAdImpression();
-            }
-
-            @Override
-            public void onAdError(Error error) {
-                // Create an AdError object
-                AdError adError = new AdError(
-                        error.hashCode(),
-                        Objects.requireNonNull(error.getMessage()),
-                        "com.lemma.gam_mediation_adapter"
-                );
-
-                // Notify the callback with the error
-                adLoadCallback.onFailure(adError);
-            }
-        });
     }
 
     public void loadAd() {
         // Load the ad into the banner view
+       if(lmBannerView == null){
+           AdError adError = new AdError(
+                   -1,
+                   "LMBannerView is null. Ad failed to load due to initialization error.",
+                   "com.lemma.gam_mediation_adapter"
+           );
+           // Notify the callback with the error
+           adLoadCallback.onFailure(adError);
+           return;
+       }
         lmBannerView.loadAd();
     }
 
