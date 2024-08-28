@@ -48,10 +48,10 @@ public class LMBannerAd implements MediationBannerAd {
             adUnitId = jsonObject.optString("adUnitId", "");
             adServerUrl = jsonObject.optString("adServerUrl", "");
 
-        } catch (JSONException error) {
+        } catch (JSONException e) {
             AdError adError = new AdError(
-                    error.hashCode(),
-                    Objects.requireNonNull(error.getMessage()),
+                    e.hashCode(),
+                    Objects.requireNonNull(e.getMessage()),
                     "com.lemma.gam_mediation_adapter"
             );
             adLoadCallback.onFailure(adError);
