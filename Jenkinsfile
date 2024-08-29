@@ -14,7 +14,40 @@ pipeline {
         AAR_FILE_PATH = "${WORKSPACE}/${env.AAR_FILE_NAME}"
     }
 
+
+
     stages {
+
+            stage('Clean Workspace') {
+                steps {
+                    echo 'Cleaning Existing Directory...'
+                    cleanWs()
+                    sh '''
+                        echo "Current Directory: $(pwd)"
+                            ls -l
+                        '''
+                }
+            }
+
+        stage('Parameter Validation') {
+                    steps {
+                        script {
+                            if(!params.LIBRARY?.trim()) {
+                                error "Parameter LIBRARY is required"
+                            }
+                            if (!params.GIT_BRANCH?.trim()) {
+                                error "Parameter GIT_BRANCH is required."
+                            }
+                            if (!params.VERSION?.trim()) {
+                                error "Parameter VERSION is required."
+                            }
+                            if (!params.ENVIRONMENT?.trim()) {
+                                error "Parameter ENVIRONMENT is required."
+                            }
+                        }
+                    }
+                }
+
         stage('Determine Repository URL and Library') {
             steps {
                 script {
@@ -29,9 +62,9 @@ pipeline {
                         'LemmaVideoSDK'      : 'lemmavideosdk'
                     ]
                     def repoDirectory = [
-                        'LMControlCoreSDKApp ' : 'LMControlCoreSDK',
-                        'GAM_SampleApp' : 'gam_mediation_adapter',
-                        'GAM_SampleApp' : 'lemmavideosdk'
+                        'LMControlCoreSDK'   : 'LMControlCoreSDKApp',
+                        'GamMediationAdapter' : 'GAM_SampleApp',
+                        'LemmaVideoSDK'      : 'GAM_SampleApp'
                     ]
                     env.GIT_HUB_REPO = repoMap[params.LIBRARY] ?: error("Invalid library selected")
                     env.LIBRARY_NAME = libraryMap[params.LIBRARY] ?: error("Invalid library selected")
@@ -40,35 +73,9 @@ pipeline {
             }
         }
 
-        stage('Parameter Validation') {
-            steps {
-                script {
-                    if(!params.LIBRARY?.trim()) {
-                        error "Parameter LIBRARY is required"
-                    }
-                    if (!params.GIT_BRANCH?.trim()) {
-                        error "Parameter GIT_BRANCH is required."
-                    }
-                    if (!params.VERSION?.trim()) {
-                        error "Parameter VERSION is required."
-                    }
-                    if (!params.ENVIRONMENT?.trim()) {
-                        error "Parameter ENVIRONMENT is required."
-                    }
-                }
-            }
-        }
 
-        stage('Clean Workspace') {
-            steps {
-                echo 'Cleaning Existing Directory...'
-                cleanWs()
-                sh '''
-                    echo "Current Directory: $(pwd)"
-                        ls -l
-                    '''
-            }
-        }
+
+
 
         stage('Checkout') {
             steps {
@@ -89,7 +96,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'nexus-uploader-usr', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
 
-                        dir(env.REPO_DIR) {
+                        dir("${env.REPO_DIR}") {
                             docker.build("${env.DOCKER_IMAGE}", ".").inside {
                                 echo "Building AAR with Docker..."
 
@@ -116,7 +123,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'nexus-uploader-usr', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                        dir(env.REPO_DIR) {
+                        dir("${env.REPO_DIR}") {
                             docker.build("${env.DOCKER_IMAGE}", ".").inside {
                                 echo "Publishing AAR to Nexus..."
                                 def aarMavenUrl = params.ENVIRONMENT == 'PROD'

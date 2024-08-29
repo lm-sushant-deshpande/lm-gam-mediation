@@ -49,6 +49,40 @@ publishing {
                 name = 'gam_mediation_adapter'
                 description = 'SDK for gam mediation adapter'
                 url = 'https://github.com/lm-sushant-deshpande/lm-gam-mediation'
+
+                withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+
+                    configurations.implementation.allDependencies.each { dep ->
+                        if (dep.group != null && dep.version != null) {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', dep.group)
+                            dependencyNode.appendNode('artifactId', dep.name)
+                            dependencyNode.appendNode('version', dep.version)
+                            dependencyNode.appendNode('scope', 'compile')
+                        }
+                    }
+
+                    configurations.api.allDependencies.each { dep ->
+                        if (dep.group != null && dep.version != null) {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', dep.group)
+                            dependencyNode.appendNode('artifactId', dep.name)
+                            dependencyNode.appendNode('version', dep.version)
+                            dependencyNode.appendNode('scope', 'compile')
+                        }
+                    }
+
+                    configurations.runtimeOnly.allDependencies.each { dep ->
+                        if (dep.group != null && dep.version != null) {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', dep.group)
+                            dependencyNode.appendNode('artifactId', dep.name)
+                            dependencyNode.appendNode('version', dep.version)
+                            dependencyNode.appendNode('scope', 'runtime')
+                        }
+                    }
+                }
             }
         }
     }
