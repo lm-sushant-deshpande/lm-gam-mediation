@@ -28,8 +28,14 @@ pipeline {
                         'GamMediationAdapter' : 'gam_mediation_adapter',
                         'LemmaVideoSDK'      : 'lemmavideosdk'
                     ]
+                    def repoDirectory = [
+                        'LMControlCoreSDKApp ' : 'LMControlCoreSDK',
+                        'GAM_SampleApp' : 'gam_mediation_adapter',
+                        'GAM_SampleApp' : 'lemmavideosdk'
+                    ]
                     env.GIT_HUB_REPO = repoMap[params.LIBRARY] ?: error("Invalid library selected")
                     env.LIBRARY_NAME = libraryMap[params.LIBRARY] ?: error("Invalid library selected")
+                    env.REPO_DIR = repoDirectory[params.LIBRARY] ?: error("Invalid library selected")
                 }
             }
         }
@@ -57,7 +63,10 @@ pipeline {
             steps {
                 echo 'Cleaning Existing Directory...'
                 cleanWs()
-                sh 'pwd'
+                sh '''
+                    echo "Current Directory: $(pwd)"
+                        ls -l
+                    '''
             }
         }
 
@@ -80,7 +89,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'nexus-uploader-usr', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
 
-                        dir('GAM_SampleApp') {
+                        dir(env.REPO_DIR) {
                             docker.build("${env.DOCKER_IMAGE}", ".").inside {
                                 echo "Building AAR with Docker..."
 
@@ -107,7 +116,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'nexus-uploader-usr', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                        dir('GAM_SampleApp') {
+                        dir(env.REPO_DIR) {
                             docker.build("${env.DOCKER_IMAGE}", ".").inside {
                                 echo "Publishing AAR to Nexus..."
                                 def aarMavenUrl = params.ENVIRONMENT == 'PROD'
