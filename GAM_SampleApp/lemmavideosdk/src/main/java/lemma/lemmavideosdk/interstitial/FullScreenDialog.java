@@ -18,7 +18,8 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
-import com.example.gam_sampleapp.R;
+
+import com.lemma.lemmavideosdk.R;
 
 import java.lang.ref.WeakReference;
 
