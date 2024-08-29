@@ -9,7 +9,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = 'lm-controlcore-sdk:latest'
+        DOCKER_IMAGE = 'lm-gam-mediation:latest'
         AAR_FILE_NAME = "${env.LIBRARY_NAME}-${params.VERSION}.aar"
         AAR_FILE_PATH = "${WORKSPACE}/${env.AAR_FILE_NAME}"
     }
