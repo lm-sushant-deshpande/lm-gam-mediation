@@ -1,4 +1,8 @@
-apply plugin: 'com.android.library'
+plugins {
+    id 'maven-publish'
+    alias(libs.plugins.android.library)
+
+}
 
 android {
     namespace 'com.example.gam_sampleapp'
