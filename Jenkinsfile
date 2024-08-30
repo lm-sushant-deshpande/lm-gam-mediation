@@ -105,7 +105,7 @@ pipeline {
                                 echo "Publishing AAR to Nexus..."
                                 def aarMavenUrl = params.ENVIRONMENT == 'PROD'
                                 ? 'https://nexus.lemmatechnologies.com/repository/maven-releases'
-                                : 'https://nexus.lemmatechnologies.com/repository/maven-releases'
+                                : 'https://nexus.lemmatechnologies.com/repository/maven-qa-releases'
 
                                 echo "Using Version: ${VERSION}"
 
@@ -126,6 +126,5 @@ pipeline {
                 }
             }
         }
-
     }
 }
