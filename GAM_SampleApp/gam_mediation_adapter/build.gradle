@@ -8,8 +8,11 @@ android {
     namespace 'com.lemma.gam_mediation_adapter'
     compileSdk 34
 
+    versionTag = project.hasProperty('version') ? project['version'] : '1.0.0'
+
     defaultConfig {
         minSdk 21
+        versionName versionTag
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -44,7 +47,7 @@ publishing {
         aar(MavenPublication) {
             groupId = 'com.lemma.gam_mediation_adapter'
             artifactId = 'gam_mediation_adapter'
-            version = project.hasProperty('version') ? project['version'] : '1.0.0'
+            version = versionTag
 
             artifact("$buildDir/outputs/aar/${project.name}-release.aar")
 

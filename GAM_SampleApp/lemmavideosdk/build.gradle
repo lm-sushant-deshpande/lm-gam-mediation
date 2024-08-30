@@ -8,12 +8,13 @@ android {
     namespace 'com.lemma.lemmavideosdk'
     compileSdkVersion 34
 //    buildToolsVersion '25.0.0'
+    versionTag = project.hasProperty('version') ? project['version'] : '1.0.0'
 
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 33
         versionCode 1
-        versionName "2.0"
+        versionName versionTag
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -45,7 +46,7 @@ publishing {
         aar(MavenPublication) {
             groupId = 'com.lemma.lemmavideosdk'
             artifactId = 'lemmavideosdk'
-            version = project.hasProperty('version') ? project['version'] : '1.0.0'
+            version = versionTag
 
             artifact("$buildDir/outputs/aar/${project.name}-release.aar")
 
