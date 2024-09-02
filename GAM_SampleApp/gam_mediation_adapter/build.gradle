@@ -1,0 +1,120 @@
+plugins {
+    id 'maven-publish'
+    alias(libs.plugins.android.library)
+
+}
+
+android {
+    namespace 'com.lemma.gam_mediation_adapter'
+    compileSdk 34
+
+    versionTag = project.hasProperty('version') ? project['version'] : '1.0.0'
+
+    defaultConfig {
+        minSdk 21
+        versionName versionTag
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation libs.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+    compileOnly(project(':lemmavideosdk'))
+    compileOnly(libs.play.services.ads)
+
+}
+
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId = 'com.lemma.gam_mediation_adapter'
+            artifactId = 'gam_mediation_adapter'
+            version = versionTag
+
+            artifact("$buildDir/outputs/aar/${project.name}-release.aar")
+
+            pom {
+                name = 'gam_mediation_adapter'
+                description = 'SDK for gam mediation adapter'
+                url = 'https://github.com/lm-sushant-deshpande/lm-gam-mediation'
+
+                withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+
+                    configurations.implementation.allDependencies.each { dep ->
+                        if (dep.group != null && dep.version != null) {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', dep.group)
+                            dependencyNode.appendNode('artifactId', dep.name)
+                            dependencyNode.appendNode('version', dep.version)
+                            dependencyNode.appendNode('scope', 'compile')
+                        }
+                    }
+
+                    configurations.api.allDependencies.each { dep ->
+                        if (dep.group != null && dep.version != null) {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', dep.group)
+                            dependencyNode.appendNode('artifactId', dep.name)
+                            dependencyNode.appendNode('version', dep.version)
+                            dependencyNode.appendNode('scope', 'compile')
+                        }
+                    }
+
+                    configurations.runtimeOnly.allDependencies.each { dep ->
+                        if (dep.group != null && dep.version != null) {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', dep.group)
+                            dependencyNode.appendNode('artifactId', dep.name)
+                            dependencyNode.appendNode('version', dep.version)
+                            dependencyNode.appendNode('scope', 'runtime')
+                        }
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url project.findProperty("mavenUrl") ?: ""
+            credentials {
+                username = project.findProperty("nexusUsername") ?: ""
+                password = project.findProperty("nexusPassword") ?: ""
+            }
+        }
+    }
+}
+
+task printAarPath {
+    doLast {
+        def aarFile = file("$buildDir/outputs/aar/${project.name}-release.aar")
+        if (aarFile.exists()) {
+            println "AAR file path: ${aarFile.absolutePath}"
+        } else {
+            println "AAR file does not exist at ${aarFile.absolutePath}"
+        }
+    }
+}
+
+tasks.named('publishAarPublicationToMavenRepository').configure {
+    dependsOn tasks.named('bundleReleaseAar')
+    dependsOn printAarPath
+}
