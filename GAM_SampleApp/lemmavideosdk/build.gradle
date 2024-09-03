@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.library)
 
 }
+def versionTag
 
 android {
     namespace 'com.lemma.lemmavideosdk'
